@@ -47,16 +47,16 @@
     Dry run - reports current status without applying any changes.
 
 .EXAMPLE
-    .\Fix-NetworkPowerPerformance.ps1
+    .\Disable-NICPacketCoalescing.ps1
 .EXAMPLE
-    .\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02","CHAR-EM53"
+    .\Disable-NICPacketCoalescing.ps1 -ComputerName "PC01","PC02","CHAR-EM53"
 .EXAMPLE
-    .\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local"
+    .\Disable-NICPacketCoalescing.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local"
 .EXAMPLE
-    .\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local" -WhatIf -ExportCsv "C:\Logs\audit.csv"
+    .\Disable-NICPacketCoalescing.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local" -WhatIf -ExportCsv "C:\Logs\audit.csv"
 .EXAMPLE
     $cred = Get-Credential
-    .\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02" -Credential $cred -ThrottleLimit 5
+    .\Disable-NICPacketCoalescing.ps1 -ComputerName "PC01","PC02" -Credential $cred -ThrottleLimit 5
 
 .NOTES
     Author  : 9 Lives IT Solutions
@@ -103,7 +103,7 @@ $ApplyBlock = {
         Add-Content -Path $logFile -Value "$(Get-Date -Format 'HH:mm:ss') | $Msg" -ErrorAction SilentlyContinue
     }
 
-    Set-Content $logFile "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] === Fix-NetworkPowerPerformance START ===" -ErrorAction SilentlyContinue
+    Set-Content $logFile "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] === Disable-NICPacketCoalescing START ===" -ErrorAction SilentlyContinue
 
     # Step 1 - scan registry and write values
     Write-Log "STEP 1 - Scanning registry for coalescing keys"
@@ -308,7 +308,7 @@ if (-not $isRemote) {
     }
     $rows    = & $LocalBlock -DryRun $isDryRun
     $summary = $rows | ForEach-Object { "$($_.Status) | $($_.Adapter)" }
-    $body    = "Fix-NetworkPowerPerformance -- $(Get-Date -Format 'yyyy-MM-dd HH:mm')`n`n" + ($summary -join "`n")
+    $body    = "Disable-NICPacketCoalescing -- $(Get-Date -Format 'yyyy-MM-dd HH:mm')`n`n" + ($summary -join "`n")
     Write-EventLog -LogName $LogName -Source $LogSource -EventId 1001 -EntryType Information -Message $body -ErrorAction SilentlyContinue
     $rows | Format-Table -AutoSize
     return
