@@ -27,7 +27,7 @@ The setting is stored in the NIC driver registry key and varies by chipset vendo
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/Fix-NetworkPowerPerformance.ps1` | Main script — disables coalescing locally or remotely |
+| `scripts/Disable-NICPacketCoalescing.ps1` | Main script — disables coalescing locally or remotely |
 | `scripts/Check-NetworkPowerStatus.ps1` | Audit script — checks current status across remote workstations |
 
 ---
@@ -65,23 +65,23 @@ The scheduled task runs as SYSTEM and survives any WinRM session drop caused by 
 
 ```powershell
 # Local (GPO startup)
-.\Fix-NetworkPowerPerformance.ps1
+.\Disable-NICPacketCoalescing.ps1
 
 # Remote — explicit list
-.\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02","WORKSTATION01"
+.\Disable-NICPacketCoalescing.ps1 -ComputerName "PC01","PC02","WORKSTATION01"
 
 # Remote — entire AD OU
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local"
+.\Disable-NICPacketCoalescing.ps1 -OUPath "OU=Workstations,DC=domain,DC=local"
 
 # Dry run — no changes applied
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -WhatIf
+.\Disable-NICPacketCoalescing.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -WhatIf
 
 # Export results to CSV
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -ExportCsv "C:\Logs\audit.csv"
+.\Disable-NICPacketCoalescing.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -ExportCsv "C:\Logs\audit.csv"
 
 # With explicit credentials and parallel throttle (PS7)
 $cred = Get-Credential
-.\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02" -Credential $cred -ThrottleLimit 5
+.\Disable-NICPacketCoalescing.ps1 -ComputerName "PC01","PC02" -Credential $cred -ThrottleLimit 5
 
 # Audit current status across multiple workstations
 .\Check-NetworkPowerStatus.ps1 -ComputerName "PC01","PC02","PC03"
@@ -93,7 +93,7 @@ $cred = Get-Credential
 [PS5.1 - sequential execution]
 
 [WORKSTATION01] Pass 1 - Applying fix...
-  [LOG] 14:32:01 | === Fix-NetworkPowerPerformance START ===
+  [LOG] 14:32:01 | === Disable-NICPacketCoalescing START ===
   [LOG] 14:32:01 | STEP 1 - Scanning registry for coalescing keys
   [LOG] 14:32:01 |   FOUND [Intel(R) Wi-Fi 6 AX201 160MHz] key=[*PacketCoalescing] value=[1]
   [LOG] 14:32:01 |   WRITTEN -> recheck=[0]
@@ -123,7 +123,7 @@ WORKSTATION01  Intel(R) Ethernet I225-LM        N/A - Unsupported
 ### 1. Copy to SYSVOL
 
 ```
-\\yourdomain.local\SYSVOL\yourdomain.local\Scripts\Fix-NetworkPowerPerformance.ps1
+\\yourdomain.local\SYSVOL\yourdomain.local\Scripts\Disable-NICPacketCoalescing.ps1
 ```
 
 ### 2. Link via Group Policy
@@ -134,7 +134,7 @@ GPO Name : Workstations-NIC-Latency
       └── Windows Settings
           └── Scripts (Startup/Shutdown)
               └── Startup → PowerShell Scripts
-                  Script : \\yourdomain.local\SYSVOL\...\Fix-NetworkPowerPerformance.ps1
+                  Script : \\yourdomain.local\SYSVOL\...\Disable-NICPacketCoalescing.ps1
 ```
 
 ### 3. Optional WMI filter
