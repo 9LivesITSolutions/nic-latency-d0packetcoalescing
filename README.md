@@ -1,4 +1,4 @@
-# nic-latency-d0packetcoalescing
+# Disable-NICPacketCoalescing
 
 > *Cut WiFi/Ethernet latency on Windows endpoints by disabling packet coalescing — works on any NIC, any vendor.*
 
