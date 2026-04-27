@@ -1,0 +1,13 @@
+# Logs
+*.log
+*.txt
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor
+.vscode/
+*.suo
+*.user
