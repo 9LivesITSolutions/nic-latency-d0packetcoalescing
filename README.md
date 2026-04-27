@@ -68,16 +68,16 @@ The scheduled task runs as SYSTEM and survives any WinRM session drop caused by 
 .\Fix-NetworkPowerPerformance.ps1
 
 # Remote — explicit list
-.\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02","CHAR-EM53"
+.\Fix-NetworkPowerPerformance.ps1 -ComputerName "PC01","PC02","WORKSTATION01"
 
 # Remote — entire AD OU
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local"
+.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local"
 
 # Dry run — no changes applied
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local" -WhatIf
+.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -WhatIf
 
 # Export results to CSV
-.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=cmcap,DC=local" -ExportCsv "C:\Logs\audit.csv"
+.\Fix-NetworkPowerPerformance.ps1 -OUPath "OU=Workstations,DC=domain,DC=local" -ExportCsv "C:\Logs\audit.csv"
 
 # With explicit credentials and parallel throttle (PS7)
 $cred = Get-Credential
@@ -92,7 +92,7 @@ $cred = Get-Credential
 ```
 [PS5.1 - sequential execution]
 
-[CHAR-EM53] Pass 1 - Applying fix...
+[WORKSTATION01] Pass 1 - Applying fix...
   [LOG] 14:32:01 | === Fix-NetworkPowerPerformance START ===
   [LOG] 14:32:01 | STEP 1 - Scanning registry for coalescing keys
   [LOG] 14:32:01 |   FOUND [Intel(R) Wi-Fi 6 AX201 160MHz] key=[*PacketCoalescing] value=[1]
@@ -101,8 +101,8 @@ $cred = Get-Credential
   [LOG] 14:32:02 | STEP 2 - NIC list written to C:\Windows\Temp\9Lives-NICList.txt
   [LOG] 14:32:02 | STEP 3 - Registering scheduled task [9Lives-NICRestart]
   [LOG] 14:32:02 | STEP 3 DONE - Task registered, fires in 3s
-[CHAR-EM53] Pass 1 done - waiting 15s for NIC restart...
-[CHAR-EM53] Pass 2 - Reading status...
+[WORKSTATION01] Pass 1 done - waiting 15s for NIC restart...
+[WORKSTATION01] Pass 2 - Reading status...
   [LOG] 14:32:05 | TASK - Started as SYSTEM
   [LOG] 14:32:05 | TASK - Restarting [Intel(R) Wi-Fi 6 AX201 160MHz]
   [LOG] 14:32:07 | TASK - Restart done [Intel(R) Wi-Fi 6 AX201 160MHz]
@@ -112,8 +112,8 @@ $cred = Get-Credential
 
 Computer   Adapter                          Status
 --------   -------                          ------
-CHAR-EM53  Intel(R) Wi-Fi 6 AX201 160MHz    OK - Disabled
-CHAR-EM53  Intel(R) Ethernet I225-LM        N/A - Unsupported
+WORKSTATION01  Intel(R) Wi-Fi 6 AX201 160MHz    OK - Disabled
+WORKSTATION01  Intel(R) Ethernet I225-LM        N/A - Unsupported
 ```
 
 ---
